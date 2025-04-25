@@ -10,8 +10,26 @@ public class Main {
             operations[i] = sc.nextLine();
         }
         sc.close();
-        for (int i = 0; i < n; i++) {
-            System.out.println(operations[i]);
+
+        boolean isLogin = false;
+        int count = 0;
+        for (String operation : operations) {
+            switch (operation) {
+                case "login":
+                    isLogin = true;
+                    break;
+                case "logout":
+                    isLogin = false;
+                    break;
+                case "private":
+                    count += isLogin ? 0 : 1;
+                    break;
+            }
         }
+        System.out.println(count);
+    }
+
+    public void logIn(boolean flag) {
+
     }
 }
