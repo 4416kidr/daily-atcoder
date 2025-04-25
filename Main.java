@@ -1,31 +1,29 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        sc.nextLine();
-        String operations[] = new String[n];
-        for (int i = 0; i < n; i++) {
-            operations[i] = sc.nextLine();
-        }
+        int[] inpt = new int[2];
+        Arrays.setAll(inpt, i -> sc.nextInt());
         sc.close();
-
-        boolean isLogin = false;
-        int count = 0;
-        for (String operation : operations) {
-            switch (operation) {
-                case "login":
-                    isLogin = true;
-                    break;
-                case "logout":
-                    isLogin = false;
-                    break;
-                case "private":
-                    count += isLogin ? 0 : 1;
-                    break;
+        int inptN = inpt[0];
+        int inptK = inpt[1];
+        int[] series = new int[inptN+1];
+        for (int i = 0; i <= inptN; i++) {
+            if (0 <= i && i < inptK) {
+                series[i] = 1;
+                continue;
             }
+            int[] temp = Arrays.copyOfRange(series, i - inptK, i);
+            // System.out.println("temp:" + Arrays.toString(temp) + Integer.toString(i-inptK) + Integer.toString(i-1));
+            series[i] = Arrays.stream(temp).sum();
         }
-        System.out.println(count);
+        // for (int i : series) {
+        //     System.out.println(i);
+        // }
+        int billion = 1_000_000_000;
+        System.out.println(series[series.length - 1] % billion);
+
     }
 }
