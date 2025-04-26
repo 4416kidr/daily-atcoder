@@ -9,21 +9,22 @@ public class Main {
         sc.close();
         int inptN = inpt[0];
         int inptK = inpt[1];
+
         int[] series = new int[inptN+1];
+        int cache = 0;
+        final int billion = 1_000_000_000;
         for (int i = 0; i <= inptN; i++) {
             if (0 <= i && i < inptK) {
                 series[i] = 1;
                 continue;
             }
-            int[] temp = Arrays.copyOfRange(series, i - inptK, i);
-            // System.out.println("temp:" + Arrays.toString(temp) + Integer.toString(i-inptK) + Integer.toString(i-1));
-            series[i] = Arrays.stream(temp).sum();
+            if (i == inptK) {
+                series[i] = Arrays.stream(Arrays.copyOfRange(series, i - inptK, i)).sum() % billion;
+            } else {
+                series[i] = (cache + series[i-1]) % billion;
+            }
+            cache = series[i] - series[i - inptK];
         }
-        // for (int i : series) {
-        //     System.out.println(i);
-        // }
-        int billion = 1_000_000_000;
-        System.out.println(series[series.length - 1] % billion);
-
+        System.out.println(series[series.length - 1]);
     }
 }
