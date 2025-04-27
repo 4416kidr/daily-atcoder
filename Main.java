@@ -4,28 +4,40 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int[] inpt = new int[2];
-        Arrays.setAll(inpt, i -> sc.nextInt());
-        sc.close();
-        int inptN = inpt[0];
-        int inptM = inpt[1];
+        int[] seriesA = new int[7];
+        Arrays.setAll(seriesA, i -> sc.nextInt());
 
-        int[] series = new int[inptM+1];
-        series[0] = 1;
-        final int BILLION = 1_000_000_000;
-        // i == 0 はtempに格納
-        for (int i = 1; i <= inptM; i++) {
-            series[i] = series[i-1] * inptN;
-            if (series[i] < 0 || BILLION < series[i]) {
-                System.out.println("inf");
-                return;
+        final int CardNum = 13;
+        
+        int[] cardsCount = new int[CardNum];
+        Arrays.fill(cardsCount, 0);
+        boolean[] flags3 = new boolean[CardNum];
+        boolean[] flags2 = new boolean[CardNum];
+        Arrays.fill(flags2, false);
+        Arrays.fill(flags3, false);
+        for (int a : seriesA) {
+            int ind = a-1;
+            cardsCount[ind] += 1;
+            if (cardsCount[ind] >= 3) {
+                flags3[ind] = true;
+                flags2[ind] = true;
+            } else if (cardsCount[ind] >= 2) {
+                flags2[ind] = true;
             }
         }
-        int ans = Arrays.stream(series).sum();
-        if (ans < 0 || BILLION < ans) {
-            System.out.println("inf");
+
+        // 判定準備
+        int[] counts = {0, 0};
+        for (int i = 0; i < CardNum; i++) {
+            counts[0] += flags2[i] ? 1 : 0;
+            counts[1] += flags3[i] ? 1 : 0;
+        }
+
+        // 判定 (c2 >= 2 && c3 >= 1 ---> true)
+        if (counts[0] > 1 && counts[1] > 0) {
+            System.out.println("Yes");
         } else {
-            System.out.println(ans);
+            System.out.println("No");
         }
     }
 }
