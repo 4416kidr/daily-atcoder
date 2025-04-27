@@ -8,23 +8,24 @@ public class Main {
         Arrays.setAll(inpt, i -> sc.nextInt());
         sc.close();
         int inptN = inpt[0];
-        int inptK = inpt[1];
+        int inptM = inpt[1];
 
-        int[] series = new int[inptN+1];
-        int cache = 0;
-        final int billion = 1_000_000_000;
-        for (int i = 0; i <= inptN; i++) {
-            if (0 <= i && i < inptK) {
-                series[i] = 1;
-                continue;
+        int[] series = new int[inptM+1];
+        series[0] = 1;
+        final int BILLION = 1_000_000_000;
+        // i == 0 はtempに格納
+        for (int i = 1; i <= inptM; i++) {
+            series[i] = series[i-1] * inptN;
+            if (series[i] < 0 || BILLION < series[i]) {
+                System.out.println("inf");
+                return;
             }
-            if (i == inptK) {
-                series[i] = Arrays.stream(Arrays.copyOfRange(series, i - inptK, i)).sum() % billion;
-            } else {
-                series[i] = (cache + series[i-1]) % billion;
-            }
-            cache = series[i] - series[i - inptK];
         }
-        System.out.println(series[series.length - 1]);
+        int ans = Arrays.stream(series).sum();
+        if (ans < 0 || BILLION < ans) {
+            System.out.println("inf");
+        } else {
+            System.out.println(ans);
+        }
     }
 }
