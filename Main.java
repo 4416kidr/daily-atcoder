@@ -1,20 +1,28 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int inptN = sc.nextInt();
+        int inptQ = sc.nextInt();
         sc.nextLine();
-        String strS = sc.nextLine();
-        String strT = sc.nextLine();
         sc.close();
 
-        int hammingDistance = 0;
-        for (int i = 0; i < inptN; i++) {
-            hammingDistance += strS.charAt(i) != strT.charAt(i) ? 1 : 0;
+        int[] deck = new int[100];
+        int pointer = 0;
+        for (int i = 0; i < inptQ; i++) {
+            int query = sc.nextInt();
+            if (query == 1) {
+                deck[pointer] = sc.nextInt();
+                pointer += 1;
+            } else {
+                if (pointer <= 0) {
+                    System.out.println(0);
+                } else {
+                    System.out.println(deck[pointer-1]);
+                    deck[pointer-1] = -1;
+                    pointer -= 1;
+                }
+            }
         }
-        
-        System.out.println(hammingDistance);
     }
 }
