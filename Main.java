@@ -1,38 +1,28 @@
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int inptN = sc.nextInt();
         sc.nextLine();
+        char[][] seriesS = new char[inptN][50];
+        int[] lengthS = new int[inptN];
+        for (int i = 0; i < inptN; i++) {
+            seriesS[i] = sc.nextLine().toCharArray();
+            lengthS[i] = seriesS[i].length;
+        }
         sc.close();
 
-        // i = 1, 2, ..., N
-        // j = N+1-i
-        // i <= j ---> i % 2 == 1 ? "#" : "."
-
-        char[][] area = new char[inptN][inptN];
-        for (int i = 0; i < inptN; i++) {
-            int j = inptN - i; //j = N + 1 - i
-            char color = i % 2 == 0 ? '#' : '.';
-            square(i, j, color, area, inptN);
-        }
-
-        // System.out.println("------------------");
-        for (int i = 0; i < inptN; i++) {
-            System.out.println(new String(area[i]));
-        }
-    }
-    private static char[][] square(int inptI, int inptJ, char color, char[][] area, int inptN) {
-        for (int i = inptI; i < inptJ; i++) {
-            for (int j = inptI; j < inptJ; j++) {
-                area[i][j] = color;
+        String ans = "";
+        Arrays.sort(lengthS);
+        for (int si : lengthS) {
+            for (int j = 0; j < inptN; j++) {
+                if (seriesS[j].length == si) {
+                    ans += String.valueOf(seriesS[j]);
+                }
             }
         }
-
-        // for (int i = 0; i < inptN; i++) {
-        //     System.out.println(new String(area[i]));
-        // }
-        return area;
+        System.out.println(ans);
     }
 }
