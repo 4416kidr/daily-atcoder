@@ -1,5 +1,21 @@
 # daily-atcoder
 
+## 0503: 配列の出力や配列の可変長化について
+
+- [配列の要素を昇順・降順にソートする(sort) (会社(@buzzword)ブログ/@javadrive)](https://www.javadrive.jp/start/array/index14.html)
+  - Arryas.sort(array)
+  - 逆順ソートはsortしてから、並び替える
+  - `for (int f = 0, l = src.length-1; f < l; f++, l--) {fとlの要素を入れ替える}`
+- [配列の中身(要素)を表示したい時の例文 いろいろ。超初心者のJavaの勉強 (個人ブログ/@programmer-life.work)](https://programmer-life.work/java/show-array)
+  - 一次元配列: System.out.println(Arrays.toString(array))
+  - 多次元配列: System.out.println(Arrays.deepToString(array))
+- [forについて (paize.io)](https://paiza.io/projects/esKF0wg3mbDd7Z2KOGVkAQ)
+  - for文の初期条件が終了条件を満たしていた場合、エラーは特になくスキップされる
+- [配列をコピーする(シャローコピーとディープコピー)  (会社(@buzzword)ブログ/@javadrive)](https://www.javadrive.jp/start/array/index10.html)
+  - 配列長の拡張: Arrays.copyOf(array, length)
+    - これで固定長を実質的に可変長として扱える
+    - 新しい配列を作っているので、パフォーマンスはイマイチ
+
 ## 0428: char配列やjava.lang.Stringについて
 
 - [java.lang.String](https://docs.oracle.com/javase/jp/8/docs/api/java/lang/String.html)
