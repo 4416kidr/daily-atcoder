@@ -12,7 +12,7 @@ public class Main {
         }
         sc.close();
 
-        int ansP = 0;
+        long ansP = 0;
         for (int i = 0; i < inptN; i++) {
             // 要素1の配列は条件を満たす
             ansP++;
