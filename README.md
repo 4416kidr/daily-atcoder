@@ -1,5 +1,27 @@
 # daily-atcoder
 
+## 0506: 配列のインデックスとスライス, Math, 階乗
+
+- [【Java】for文で階乗を計算する (個人ブログ)](https://interuniversitylearning.com/archives/5798)
+  - 階乗は `java.lang.Math` にないみたいなので、for文で自作するしかない
+- [java.lang.Math (javaDocs)](https://docs.oracle.com/javase/jp/8/docs/api/java/lang/Math.html)
+  - abs(int a), ceil(double a), floor(double a), floorMod(int x, int y), max(int a, int b), min(int a, int b), pow(double a, double b), random(), round(double a), signum(double d), sqrt(double a), toDegrees(double angrad), toRadians(double angdeg)
+    - absを使えたが自力実装した
+- [Java 配列のインデックス (delfstack)](https://www.delftstack.com/ja/howto/java/java-array-indexof/)
+  - arraysにはindexOfが存在しない
+  - java.util.List: `Arryas.asList(arr).indexOf(8)`
+    - 8という要素のIndexを取得する
+    - java.util.ListのindexOfという関数を使う
+  - java.util.stream.IntStream: IntStream.range(0, arr.length).filter(i -> elm == arr[i]).findFirst().orElse(-1)
+- [Java で配列をスライスする (delfstack)](https://www.delftstack.com/ja/howto/java/java-array-splice/)
+  - java.utils.Arrays: copyOfRange(arr, stIndx, enIndx)
+    - インデックス1-3の要素を取りたい場合は(arr, 1, 4)
+
+## 0504: オーバーフローに抗う方法
+
+- [NTTアルゴリズム](https://www.perplexity.ai/search/number-theoric-transformwoshi-ZzpaUItmQxWwC0Sgy8Phbw)
+  - 12289を使うと掛け算にも対抗できる
+
 ## 0503: 配列の出力や配列の可変長化について
 
 - [配列の要素を昇順・降順にソートする(sort) (会社(@buzzword)ブログ/@javadrive)](https://www.javadrive.jp/start/array/index14.html)
