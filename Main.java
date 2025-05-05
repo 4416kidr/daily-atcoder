@@ -16,12 +16,7 @@ public class Main {
         }
         sc.close();
 
-
-        int a = func(seriesP, 1);
-        System.out.println("lastP: " + a + " >>>");
-        int b = func(seriesQ, 1);
-        System.out.println("lastQ: " + b + " >>>");
-        System.out.println(abs(a, b));
+        System.out.println(abs(func(seriesP, 1), func(seriesQ, 1)));
     }
     private static int permutation(int n) {
         int res = 1;
@@ -31,24 +26,23 @@ public class Main {
         return res;
     }
     private static int func(int[] series, int v) {
-        System.out.println("--- func(" + v + "): " + Arrays.toString(series) + " ---");
         if (series.length == 1) {
             return v;
         }
+        // インデックス検索の準備
         int[] sortedArray = Arrays.copyOf(series, series.length);
         Arrays.sort(sortedArray);
-        System.out.println("  sorted: " + Arrays.toString(sortedArray));
         
-        int a = series[0];
+        // index of
+        final int a = series[0];
         int ind = -1;
         for (int i = 0; i < series.length; i++) {
             if (a == sortedArray[i]) {
                 ind = i;
+                break;
             }
         }
-        int diff = ind * permutation(series.length-1);
-        System.out.println("  = v(" + v + ") + diff(" + diff + ", ind(" + ind + "))");
-        return func(Arrays.copyOfRange(series, 1, series.length), v + diff);
+        return func(Arrays.copyOfRange(series, 1, series.length), v + ind * permutation(series.length-1));
     }
     private static int abs(int a, int b) {
         // Math.abs(a-b);
