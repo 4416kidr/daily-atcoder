@@ -4,51 +4,31 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int inptN = sc.nextInt();
-        sc.nextLine();
-        int[] seriesP = new int[inptN];
-        for (int i = 0; i < inptN; i++) {
-            seriesP[i] = sc.nextInt();
-        }
-        int[] seriesQ = new int[inptN];
-        for (int i = 0; i < inptN; i++) {
-            seriesQ[i] = sc.nextInt();
-        }
+        String series = sc.nextLine();
         sc.close();
 
-        int ra = 1;
-        int rb = 1;
-        for (int i = 0; i < inptN; i++) {
-            int[] sortedArrayP = Arrays.copyOfRange(seriesP, i, inptN);
-            Arrays.sort(sortedArrayP);
-            int[] sortedArrayQ = Arrays.copyOfRange(seriesQ, i, inptN);
-            Arrays.sort(sortedArrayQ);
-
-            boolean[] flags = new boolean[]{false, false};
-            int[] inds = new int[]{-1, -1};
-            for (int j = 0; j < sortedArrayP.length; j++) {
-                if (seriesP[i] == sortedArrayP[j]) {
-                    inds[0] = j;
-                    flags[0] = true;
+        System.out.println(series);
+        int indA = -1;
+        int indB = -1;
+        int indC = -1;
+        int count = 0;
+        for (int i = 0; i < series.length(); i++) {
+            if (series.charAt(i) != 'A') {
+                continue;
+            }
+            indA = i;
+            for (int j = i+1; j < series.length(); j++) {
+                if (series.charAt(j) != 'B') {
+                    continue;
                 }
-                if (seriesQ[i] == sortedArrayQ[j]) {
-                    inds[1] = j;
-                    flags[1] = true;
-                }
-                if (flags[0] && flags[1]) {
-                    break;
+                indB = j;
+                indC = j + (j-i);
+                System.out.println(indA + "(" + series.charAt(indA) + "), " + indB + "(" + series.charAt(indB) + "), " + indC + "(" + series.charAt(indC) + ")");
+                if (series.charAt(indC) == 'C') {
+                    count += 1;
                 }
             }
-            ra += inds[0] * permutation(inptN - 1 - i);
-            rb += inds[1] * permutation(inptN - 1 - i);
         }
-        System.out.println(Math.abs(ra-rb));
-    }
-    private static int permutation(int n) {
-        int res = 1;
-        for (int i = n; i > 0; i--) {
-            res *= i;
-        }
-        return res;
+        System.out.println(count);
     }
 }
