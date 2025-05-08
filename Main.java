@@ -13,44 +13,27 @@ public class Main {
         sc.close();
         
         Arrays.sort(seriesA);
-        System.out.println(inptN + ", " + inptM);
-        System.out.println(Arrays.toString(seriesA));
-
         int ap = 0;
         int bp = 0;
-        boolean isHit = false;
         int[] seriesAns = new int[inptN];
         for (int i = 1; i <= inptN; i++) {
             // out of index
             if (ap >= inptM) {
-                System.out.println("ap >= inptM");
-                seriesAns[bp] = i;
-                bp++;
+                seriesAns[bp++] = i;
                 continue;
             }
-            isHit = false;
-            for (int j = ap; j < inptM; j++) {
-                System.out.println("[" + i + ", " + j + "]: " + seriesA[j] + ", " + isHit);
-                if (seriesA[j] == i) {
-                    isHit = true;
-                    ap += 1;
-                    break;
-                }
+            // hit
+            if (seriesA[ap] == i) {
+                ap++;
+                continue;
             }
-            System.out.println("isHit: " + isHit);
-            if (!isHit) {
-                System.out.println("add");
-                seriesAns[bp] = i;
-                bp++;
-            }
+            // add to ans
+            seriesAns[bp++] = i;
         }
-        System.out.println("length: " + seriesAns.length + ", " + bp);
-        String ans = "";
-        for (int i = 0; i < bp; i++) {
-            if (i == 0) {
-                ans += seriesAns[i];
-                continue;
-            }
+
+        // output
+        String ans = bp == 0 ? "" : Integer.toString(seriesAns[0]);
+        for (int i = 1; i < bp; i++) {
             ans += " " + seriesAns[i];
         }
         System.out.println(bp + "\n" + ans);
