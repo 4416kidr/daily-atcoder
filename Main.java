@@ -1,22 +1,53 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int inptN = sc.nextInt();
-        int[] seriesA = new int[inptN];
+        
+        int groupSize = 20;
+        int[][] grouped = new int[groupSize][inptN];
+        int[] gPointer = new int[groupSize];
+        int tempInpt = -1;
         for (int i = 0; i < inptN; i++) {
-            seriesA[i] = sc.nextInt();
+            tempInpt = sc.nextInt();
+            // 降順を可能にするために符号を逆転する
+            grouped[tempInpt % groupSize][gPointer[tempInpt % groupSize]++] = -tempInpt;
         }
         sc.close();
         
+        int[] countA = new int[groupSize];
+        int tempCount = -1;
+        System.out.println("--- grouped ---");
+        for (int i = 0; i < groupSize; i++) {
+            Arrays.sort(grouped[i]);
+            System.out.println(Arrays.toString(grouped[i]));
+            // calc length
+            tempCount = 0;
+            for (tempCount = 0; tempCount < inptN; tempCount++) {
+                if (grouped[i][tempCount] == 0)
+                    break;
+            }
+            countA[i] = tempCount;
+        }
+        System.out.println(Arrays.toString(countA));
+
         int count = 0;
-        for (int i = 0; i < inptN; i++) {
-            for (int j = i+1; j < inptN; j++) {
-                if (seriesA[i] % 100 != seriesA[j] % 100) {
-                    continue;
+        int tempSize = -1;
+        for (int i = 0; i < groupSize; i++) {
+            tempSize = countA[i];
+            if (tempSize <= 1) {
+                continue;
+            }
+            System.out.println("start: " + i);
+            for (int j = 0; j < tempSize; j++) {
+                for (int k = j+1; k < tempSize; k++) {
+                    if ((-grouped[i][j] - -grouped[i][k]) % 200 == 0) {
+                        System.out.println(String.format("  %1$d, %2$d: %3$d, %4$d -> %5$d", j, k, -grouped[i][j], -grouped[i][k], -grouped[i][j] - -grouped[i][k]));
+                        count++;
+                    }
                 }
-                count += (seriesA[i] - seriesA[j]) % 200 == 0 ? 1 : 0;
             }
         }
         System.out.println(count);
