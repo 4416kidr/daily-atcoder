@@ -1,41 +1,25 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int inptN = sc.nextInt();
-        int inptM = sc.nextInt();
-        int[] seriesA = new int[inptM];
-        for (int i = 0; i < inptM; i++) {
+        int[] seriesA = new int[inptN];
+        for (int i = 0; i < inptN; i++) {
             seriesA[i] = sc.nextInt();
         }
         sc.close();
         
-        Arrays.sort(seriesA);
-        int ap = 0;
-        int bp = 0;
-        int[] seriesAns = new int[inptN];
-        for (int i = 1; i <= inptN; i++) {
-            // out of index
-            if (ap >= inptM) {
-                seriesAns[bp++] = i;
-                continue;
+        int count = 0;
+        int add = -1;
+        for (int i = 0; i < inptN; i++) {
+            for (int j = i+1; j < inptN; j++) {
+                add = (seriesA[i] - seriesA[j]) % 200 == 0 ? 1 : 0;
+                count += add;
+                if (add == 1)
+                    System.out.println(String.format("[%1$d, %2$d] %3$d, %4$d", i+1, j+1, seriesA[i], seriesA[j]));
             }
-            // hit
-            if (seriesA[ap] == i) {
-                ap++;
-                continue;
-            }
-            // add to ans
-            seriesAns[bp++] = i;
         }
-
-        // output
-        String ans = bp == 0 ? "" : Integer.toString(seriesAns[0]);
-        for (int i = 1; i < bp; i++) {
-            ans += " " + seriesAns[i];
-        }
-        System.out.println(bp + "\n" + ans);
+        System.out.println("last: " + count);
     }
 }
