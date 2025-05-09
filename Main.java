@@ -11,15 +11,14 @@ public class Main {
         sc.close();
         
         int count = 0;
-        int add = -1;
         for (int i = 0; i < inptN; i++) {
             for (int j = i+1; j < inptN; j++) {
-                add = (seriesA[i] - seriesA[j]) % 200 == 0 ? 1 : 0;
-                count += add;
-                if (add == 1)
-                    System.out.println(String.format("[%1$d, %2$d] %3$d, %4$d", i+1, j+1, seriesA[i], seriesA[j]));
+                if (seriesA[i] % 100 != seriesA[j] % 100) {
+                    continue;
+                }
+                count += (seriesA[i] - seriesA[j]) % 200 == 0 ? 1 : 0;
             }
         }
-        System.out.println("last: " + count);
+        System.out.println(count);
     }
 }
