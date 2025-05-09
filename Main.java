@@ -19,10 +19,8 @@ public class Main {
         
         int[] countA = new int[groupSize];
         int tempCount = -1;
-        System.out.println("--- grouped ---");
         for (int i = 0; i < groupSize; i++) {
             Arrays.sort(grouped[i]);
-            System.out.println(Arrays.toString(grouped[i]));
             // calc length
             tempCount = 0;
             for (tempCount = 0; tempCount < inptN; tempCount++) {
@@ -31,7 +29,6 @@ public class Main {
             }
             countA[i] = tempCount;
         }
-        System.out.println(Arrays.toString(countA));
 
         int count = 0;
         int tempSize = -1;
@@ -40,11 +37,9 @@ public class Main {
             if (tempSize <= 1) {
                 continue;
             }
-            System.out.println("start: " + i);
             for (int j = 0; j < tempSize; j++) {
                 for (int k = j+1; k < tempSize; k++) {
                     if ((-grouped[i][j] - -grouped[i][k]) % 200 == 0) {
-                        System.out.println(String.format("  %1$d, %2$d: %3$d, %4$d -> %5$d", j, k, -grouped[i][j], -grouped[i][k], -grouped[i][j] - -grouped[i][k]));
                         count++;
                     }
                 }
