@@ -27,11 +27,17 @@ public class Main {
                 continue;
             }
             // countの更新: combination(同じ値の個数, 2)
-            count += tempSameCount * (tempSameCount - 1) / 2;
+            count += combinationPreventOverFlow(tempSameCount);
             tempSameCount = 1;
         }
 
         count += tempSameCount > 1 ? tempSameCount * (tempSameCount - 1) / 2 : 0;
         System.out.println(count);
+    }
+
+    public static int combinationPreventOverFlow(int n) {
+        int a = n % 2 == 0 ? n / 2 : n;
+        int b = (n-1) % 2 == 0 ? (n-1) / 2 : n-1;
+        return a*b;
     }
 }
