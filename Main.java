@@ -19,7 +19,6 @@ public class Main {
                 if (seriesA[i] != seriesA[j]) {
                     break;
                 }
-                System.out.println(String.format("%1$d, %2$d: %3$d, %4$d", i, j, seriesA[i], seriesA[j]));
                 count++;
             }
         }
