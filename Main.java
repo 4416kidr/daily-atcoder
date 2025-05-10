@@ -14,7 +14,7 @@ public class Main {
         
         Arrays.sort(seriesA);
         int startPointer = 0;
-        int count = 0;
+        long count = 0;
         int tempSameCount = 1;
         for (int endPointer = 1; endPointer < inptN; endPointer++) {
             if (seriesA[startPointer] == seriesA[endPointer]) {
@@ -31,13 +31,13 @@ public class Main {
             tempSameCount = 1;
         }
 
-        count += tempSameCount > 1 ? tempSameCount * (tempSameCount - 1) / 2 : 0;
+        count += tempSameCount > 1 ? combinationPreventOverFlow(tempSameCount) : 0;
         System.out.println(count);
     }
 
-    public static int combinationPreventOverFlow(int n) {
+    public static long combinationPreventOverFlow(int n) {
         int a = n % 2 == 0 ? n / 2 : n;
         int b = (n-1) % 2 == 0 ? (n-1) / 2 : n-1;
-        return a*b;
+        return (long)a*(long)b;
     }
 }
