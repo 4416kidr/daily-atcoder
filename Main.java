@@ -5,37 +5,39 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int inptN = sc.nextInt();
-        int inptM = sc.nextInt();
-        int[] seriesA = new int[inptM];
-        for (int i = 0; i < inptM; i++) {
-            seriesA[i] = sc.nextInt();
+        int[] seriesA = new int[inptN];
+        for (int i = 0; i < inptN; i++) {
+            // 基数200の世界を扱う
+            seriesA[i] = sc.nextInt() % 200;
         }
         sc.close();
         
         Arrays.sort(seriesA);
-        int ap = 0;
-        int bp = 0;
-        int[] seriesAns = new int[inptN];
-        for (int i = 1; i <= inptN; i++) {
-            // out of index
-            if (ap >= inptM) {
-                seriesAns[bp++] = i;
+        int startPointer = 0;
+        long count = 0;
+        int tempSameCount = 1;
+        for (int endPointer = 1; endPointer < inptN; endPointer++) {
+            if (seriesA[startPointer] == seriesA[endPointer]) {
+                tempSameCount++;
                 continue;
             }
-            // hit
-            if (seriesA[ap] == i) {
-                ap++;
+            // Pointerの更新と次の探索へ
+            startPointer = endPointer;
+            if (tempSameCount <= 1) {
                 continue;
             }
-            // add to ans
-            seriesAns[bp++] = i;
+            // countの更新: combination(同じ値の個数, 2)
+            count += combinationPreventOverFlow(tempSameCount);
+            tempSameCount = 1;
         }
 
-        // output
-        String ans = bp == 0 ? "" : Integer.toString(seriesAns[0]);
-        for (int i = 1; i < bp; i++) {
-            ans += " " + seriesAns[i];
-        }
-        System.out.println(bp + "\n" + ans);
+        count += tempSameCount > 1 ? combinationPreventOverFlow(tempSameCount) : 0;
+        System.out.println(count);
+    }
+
+    public static long combinationPreventOverFlow(int n) {
+        int a = n % 2 == 0 ? n / 2 : n;
+        int b = (n-1) % 2 == 0 ? (n-1) / 2 : n-1;
+        return (long)a*(long)b;
     }
 }
