@@ -12,15 +12,11 @@ public class Main {
             seriesT[i] = sc.nextInt();
         }
         sc.close();
-        System.out.println(inptN + ", " + inptQ);
-        System.out.println(Arrays.toString(seriesT));
         
         boolean[] noTeeth = new boolean[inptN];
-        System.out.println(Arrays.toString(noTeeth));
         for (int s : seriesT) {
             noTeeth[s-1] = !noTeeth[s-1];
         }
-        System.out.println(Arrays.toString(noTeeth));
         int count = 0;
         for (boolean b : noTeeth) {
             count += b ? 0 : 1;
