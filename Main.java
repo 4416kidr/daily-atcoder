@@ -3,18 +3,26 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        long inptX = sc.nextLong(); // 9 * 10^18
-        sc.close();
-
-        int ans = 1;
-        long temp = inptX;
-        for (int i = 2; i < 21; i++) {
-            // System.out.println(String.format("[%1$d]: ans(%2$d), temp(%3$d)", i, ans, temp));
-            if (temp % i != 0) {
-                break;
+        String inptD = sc.nextLine();
+        String ans = "";
+        for (int i = 0; i < inptD.length(); i++) {
+            switch (inptD.charAt(i)) {
+                case 'N':
+                    ans += "S";
+                    continue;
+                case 'S':
+                    ans += "N";
+                    continue;
+                case 'E':
+                    ans += "W";
+                    continue;
+                case 'W':
+                    ans += "E";
+                    continue;
+                default:
+                    ans += "";
+                    continue;
             }
-            temp /= i;
-            ans = i;
         }
         System.out.println(ans);
     }
