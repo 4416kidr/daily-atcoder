@@ -1,27 +1,21 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int inptN = sc.nextInt();
-        int inptQ = sc.nextInt();
-        sc.nextLine();
-        int[] seriesT = new int[inptQ];
-        for (int i = 0; i < inptQ; i++) {
-            seriesT[i] = sc.nextInt();
-        }
+        long inptX = sc.nextLong(); // 9 * 10^18
         sc.close();
-        
-        boolean[] noTeeth = new boolean[inptN];
-        for (int s : seriesT) {
-            noTeeth[s-1] = !noTeeth[s-1];
-        }
-        int count = 0;
-        for (boolean b : noTeeth) {
-            count += b ? 0 : 1;
-        }
-        System.out.println(count);
 
+        int ans = 1;
+        long temp = inptX;
+        for (int i = 2; i < 21; i++) {
+            // System.out.println(String.format("[%1$d]: ans(%2$d), temp(%3$d)", i, ans, temp));
+            if (temp % i != 0) {
+                break;
+            }
+            temp /= i;
+            ans = i;
+        }
+        System.out.println(ans);
     }
 }
