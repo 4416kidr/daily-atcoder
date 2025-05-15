@@ -13,16 +13,20 @@ public class Main {
         sc.close();
 
         // 縦検査
+        short[] ans = new short[2];
         for (short i = 0; i < inptN - inptM + 1; i++) {
             if (!tableS[i].contains(tableT[0]))
                 continue;
-            System.out.println("line" + i);
+            // 1行目ヒット
+            System.out.println("--- line" + i + " ---");
             // 列を調べる
-            // 各行の含有チェック
-            for (short j = 1; j < inptM; j++) {
-                if (tableS[i+j].contains(tableS[j]))
-                    System.out.println(String.format("%1$d %2$d", i, j));
-                
+            for (short j = 0; j < inptN - inptM + 1; j++) {
+                System.out.println(i + ", " + j + ", " + tableS[i].substring(j, j+inptM));
+                if (!tableS[i].substring(j).startsWith(tableT[0]))
+                    continue;
+                ans[1] = j;
+                ans[0] = i;
+                System.out.println(String.format("first line match: (%1$d, %2$d)", ans[0]+1, ans[1]+1));
             }
         }
     }
