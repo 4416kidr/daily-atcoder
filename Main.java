@@ -1,29 +1,23 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String inptD = sc.nextLine();
-        String ans = "";
-        for (int i = 0; i < inptD.length(); i++) {
-            switch (inptD.charAt(i)) {
-                case 'N':
-                    ans += "S";
-                    continue;
-                case 'S':
-                    ans += "N";
-                    continue;
-                case 'E':
-                    ans += "W";
-                    continue;
-                case 'W':
-                    ans += "E";
-                    continue;
-                default:
-                    ans += "";
-                    continue;
-            }
+        final short inptN = sc.nextShort();
+        final short inptM = sc.nextShort();
+        sc.nextLine();
+        System.out.println(inptN + ", " + inptM);
+        final char[][] tableS = inputTable(inptN, sc);
+        final char[][] tableT = inputTable(inptM, sc);
+        sc.close();
+    }
+    private static char[][] inputTable(short n, Scanner sc) {
+        char[][] array = new char[n][n];
+        for (short i = 0; i < n; i++) {
+            array[i] = String.join("", sc.nextLine().split(" ")).toCharArray();
         }
-        System.out.println(ans);
+        Arrays.asList(array).forEach(l -> System.out.println(Arrays.toString(l)));
+        return array;
     }
 }
