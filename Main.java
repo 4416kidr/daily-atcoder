@@ -13,6 +13,7 @@ public class Main {
         sc.close();
 
         // 縦検査
+        boolean isNG = false;
         short[] ans = new short[2];
         for (short i = 0; i < inptN - inptM + 1; i++) {
             if (!tableS[i].contains(tableT[0]))
@@ -27,6 +28,19 @@ public class Main {
                 ans[1] = j;
                 ans[0] = i;
                 System.out.println(String.format("first line match: (%1$d, %2$d)", ans[0]+1, ans[1]+1));
+                // 2行目以降の等価チェック
+                for (short k = 1; k < inptM; k++) {
+                    System.out.println("start checking after line 2: " + (j+1));
+                    if (!tableS[i+k].substring(j).startsWith(tableT[k])) {
+                        isNG = true;
+                        break;
+                    }
+                }
+                System.out.println(i+1 + " " + (j+1) + "? " + isNG);
+                if (!isNG)
+                    System.out.println(i+1 + " " + (j+1));
+                isNG = false;
+
             }
         }
     }
