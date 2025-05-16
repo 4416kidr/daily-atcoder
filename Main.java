@@ -1,9 +1,7 @@
-import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,7 +10,6 @@ public class Main {
         List<ScoreRank> scores = new ArrayList<>();
         IntStream.range(0, N).forEach(v -> scores.add(new ScoreRank(sc.nextInt())));
         sc.close();
-        System.out.println(N + ", " + scores);
         solve(N, scores);
         output(scores);
     }
@@ -20,16 +17,13 @@ public class Main {
         IntStream.range(1, n+1).forEach(i -> {
             int countHasRank = scores.size() - countRemain(scores);
             if (countHasRank >= i) {
-                System.out.println(String.format("[%1$d] skip rank: %2$d(%3$d) <= %4$d", i, countHasRank, countRemain(scores), i));
                 return;
             }
             ScoreRank maxScoreRank = scores.stream().filter(sr -> !sr.hasRank()).max(ScoreRank::compareTo).orElse(null);
             if (maxScoreRank == null) {
                 return;
             }
-            System.out.println(String.format("[%1$d] max: %2$s", i, maxScoreRank));
             scores.stream().filter(sr -> sr.getScore() == maxScoreRank.getScore()).forEach(sr -> sr.setRank(i));
-            System.out.println(String.format("[%1$d]   scores -> %2$s", i, scores));
         });
     }
 
