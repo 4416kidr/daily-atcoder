@@ -1,46 +1,79 @@
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        final short inptN = sc.nextShort();
-        final short inptM = sc.nextShort();
-        sc.nextLine();
-        final String[] tableS = inputTable(inptN, sc);
-        final String[] tableT = inputTable(inptM, sc);
+        final int N = sc.nextInt();
+        List<ScoreRank> scores = new ArrayList<>();
+        IntStream.range(0, N).forEach(v -> scores.add(new ScoreRank(sc.nextInt())));
         sc.close();
-
-        boolean isNG = false;
-        short[] ans = new short[2];
-        for (short i = 0; i < inptN - inptM + 1; i++) {
-            if (!tableS[i].contains(tableT[0]))
-                continue;
-            // 1行目ヒット -> 列を調べる
-            for (short j = 0; j < inptN - inptM + 1; j++) {
-                if (!tableS[i].substring(j).startsWith(tableT[0]))
-                    continue;
-                ans[1] = j;
-                ans[0] = i;
-                // 2行目以降の等価チェック
-                for (short k = 1; k < inptM; k++) {
-                    if (!tableS[i+k].substring(j).startsWith(tableT[k])) {
-                        isNG = true;
-                        break;
-                    }
-                }
-                if (!isNG)
-                    System.out.println(i+1 + " " + (j+1));
-                isNG = false;
-
-            }
-        }
+        System.out.println(N + ", " + scores);
+        solve(N, scores);
+        output(scores);
     }
-    private static String[] inputTable(short n, Scanner sc) {
-        String[] array = new String[n];
-        for (short i = 0; i < n; i++) {
-            array[i] = sc.nextLine();
-        }
-        return array;
+    private static void solve(int n, List<ScoreRank> scores) {
+        IntStream.range(1, n+1).forEach(i -> {
+            int countHasRank = scores.size() - countRemain(scores);
+            if (countHasRank >= i) {
+                System.out.println(String.format("[%1$d] skip rank: %2$d(%3$d) <= %4$d", i, countHasRank, countRemain(scores), i));
+                return;
+            }
+            ScoreRank maxScoreRank = scores.stream().filter(sr -> !sr.hasRank()).max(ScoreRank::compareTo).orElse(null);
+            if (maxScoreRank == null) {
+                return;
+            }
+            System.out.println(String.format("[%1$d] max: %2$s", i, maxScoreRank));
+            scores.stream().filter(sr -> sr.getScore() == maxScoreRank.getScore()).forEach(sr -> sr.setRank(i));
+            System.out.println(String.format("[%1$d]   scores -> %2$s", i, scores));
+        });
+    }
+
+    private static int countRemain(List<ScoreRank> scores) {
+        return (int)scores.stream().filter(o -> !o.hasRank()).count();
+    }
+
+    private static void output(List<ScoreRank> scores) {
+        scores.forEach(v -> System.out.println(v.getRank()));
+    }
+}
+
+class ScoreRank extends Object implements Comparable<ScoreRank> {
+    private final int score;
+    private int rank;
+
+    public ScoreRank(int score) {
+        this.score = score;
+        this.rank = -1;
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public boolean hasRank() {
+        return this.rank != -1;
+    }
+
+    public int getRank() {
+        return this.rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("score(%1$d), rank(%2$d)", this.score, this.rank);
+    }
+
+    @Override
+    public int compareTo(ScoreRank sr) {
+        return this.score == sr.getScore() ? 0 : (this.score < sr.getScore() ? -1 : 1);
     }
 }
