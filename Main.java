@@ -1,73 +1,61 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
+    // 16m45s
+    // ABC388B
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         final int N = sc.nextInt();
-        List<ScoreRank> scores = new ArrayList<>();
-        IntStream.range(0, N).forEach(v -> scores.add(new ScoreRank(sc.nextInt())));
+        final int D = sc.nextInt();
+        List<Snake> snakes = new ArrayList<>();
+        IntStream.range(0, N).forEach(i -> snakes.add(new Snake(sc.nextInt(), sc.nextInt())));
         sc.close();
-        solve(N, scores);
-        output(scores);
+        solve(D, snakes);
     }
-    private static void solve(int n, List<ScoreRank> scores) {
-        IntStream.range(1, n+1).forEach(i -> {
-            int countHasRank = scores.size() - countRemain(scores);
-            if (countHasRank >= i) {
-                return;
-            }
-            ScoreRank maxScoreRank = scores.stream().filter(sr -> !sr.hasRank()).max(ScoreRank::compareTo).orElse(null);
-            if (maxScoreRank == null) {
-                return;
-            }
-            scores.stream().filter(sr -> sr.getScore() == maxScoreRank.getScore()).forEach(sr -> sr.setRank(i));
+    private static void solve(int D, List<Snake> snakes) {
+        IntStream.range(1, D+1).forEach(i -> {
+            snakes.forEach(s -> s.incrementLength());
+            System.out.println(Collections.max(snakes).getWeight());
         });
-    }
-
-    private static int countRemain(List<ScoreRank> scores) {
-        return (int)scores.stream().filter(o -> !o.hasRank()).count();
-    }
-
-    private static void output(List<ScoreRank> scores) {
-        scores.forEach(v -> System.out.println(v.getRank()));
     }
 }
 
-class ScoreRank extends Object implements Comparable<ScoreRank> {
-    private final int score;
-    private int rank;
+class Snake extends Object implements Comparable<Snake> {
+    private final int thick;
+    private int length;
 
-    public ScoreRank(int score) {
-        this.score = score;
-        this.rank = -1;
+    public Snake(int thick, int length) {
+        this.thick = thick;
+        this.length = length;
     }
 
-    public int getScore() {
-        return this.score;
+    public int getThick() {
+        return this.thick;
     }
 
-    public boolean hasRank() {
-        return this.rank != -1;
+    public int getLength() {
+        return this.length;
     }
 
-    public int getRank() {
-        return this.rank;
+    public void incrementLength() {
+        this.length++;
     }
 
-    public void setRank(int rank) {
-        this.rank = rank;
+    public int getWeight() {
+        return this.thick * this.length;
     }
 
     @Override
     public String toString() {
-        return String.format("score(%1$d), rank(%2$d)", this.score, this.rank);
+        return String.format("thick(%1$d) * length(%2$d) = weight(%3$d)", this.thick, this.length, this.getWeight());
     }
 
     @Override
-    public int compareTo(ScoreRank sr) {
-        return this.score == sr.getScore() ? 0 : (this.score < sr.getScore() ? -1 : 1);
+    public int compareTo(Snake sn) {
+        return Integer.compare(this.getWeight(), sn.getWeight());
     }
 }
