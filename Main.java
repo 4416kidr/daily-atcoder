@@ -1,31 +1,52 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Main {
     // 24m55s
-    // ABC390A
+    // ABC386B
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Integer> list = IntStream.range(0, 5).map(i -> sc.nextInt()).boxed().toList();
+        String inpt = sc.nextLine();
         sc.close();
-        boolean ans = solve(list);
-        System.out.println(ans ? "Yes" : "No");
+        System.out.println(inpt);
+        System.out.println(solve(inpt));
     }
 
-    private static boolean solve(List<Integer> list) {
-        // 実際にスワップしてみる
-        if (isSorted(list)) {
-            return false;
+    private static int solve(String inpt) {
+        Iterator<String> inpIterator = inpt.chars().mapToObj(c -> String.valueOf(c - '0')).collect(Collectors.toList()).iterator();
+        // List<String> inpIterator = inpt.chars().mapToObj(c -> String.valueOf(c - '0')).collect(Collectors.toList());
+        // inpIterator.forEachRemaining(actualList::add);
+        // System.out.println(inpIterator);
+        int count = 0;
+        boolean isZero = false;
+        while (inpIterator.hasNext()) {
+            char c = inpIterator.next().charAt(0);
+            System.out.println(String.format("[%1$s] %2$s, %3$s", c, count, isZero));
+            if (c == '0') {
+                count += isZero ? 1 : 0;
+                isZero = !isZero;
+                continue;
+            }
+            // 0が終わった
+            if (isZero) {
+                count++;
+                isZero = false;
+            }
+            if (c == 'z') {
+
+            }
+            // 0出ないので加算
+            count++;
         }
-        return (int)IntStream.range(0, 4).filter(i -> isSorted(swap2At(list, i))).count() == 1;
-    }
-
-    private static boolean isSorted(List<Integer> list) {
-        return list.stream().allMatch(v -> v == (list.indexOf(v)+1));
-    }
-
-    private static List<Integer> swap2At(List<Integer> list, int ind) {
-        return IntStream.range(0, 5).map(i -> i == ind ? list.get(i+1) : i-1 == ind ? list.get(i-1) : list.get(i)).boxed().toList();
+        System.out.println("before finishize: " + count);
+        // 終了処理 (0で終わった場合は1加算)
+        count += isZero ? 1 : 0;
+        System.out.println("finish while: " + count);
+        return count;
     }
 }
