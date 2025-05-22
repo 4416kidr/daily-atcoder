@@ -18,16 +18,21 @@ public class Main {
 
     public static void solve(List<Data> list) {
         System.out.println("solve");
-        checkFormat(list);
+        if (!isSafeFormat(list)) {
+            System.out.println(0);
+            return;
+        }
+        System.out.println((long)(Math.pow(2, list.size() / 2)));
     }
 
-    public static boolean checkFormat(List<Data> list) {
+    public static boolean isSafeFormat(List<Data> list) {
         list.sort((x, y) -> Integer.compare(x.getAbs(), y.getAbs()));
         boolean isOK = false;
         if (list.size() % 2 == 1) {
-            isOK = IntStream.range(0, list.size()).allMatch(i -> (i+1)/2 == list.get(i).getAbs());
+            // odd
+            isOK = IntStream.range(0, list.size()).allMatch(i -> (i+1)/2 == list.get(i).getAbs()/2);
         } else {
-            isOK = IntStream.range(0, list.size()).allMatch(i -> i/2 == list.get(i).getAbs());
+            isOK = IntStream.range(0, list.size()).allMatch(i -> i/2 == list.get(i).getAbs()/2);
         }
         System.out.println(String.format("%1$s, isOK(%2$s), list: %3$s", list.size() % 2 == 0 ? "even" : "odd", isOK, list));
         return isOK;
