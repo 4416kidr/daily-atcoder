@@ -4,60 +4,120 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
-    // 60m: 正確には測れなかったが、60分ぐらい
+    // 44m
     // ABC066C
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        final int N = sc.nextInt();
-        List<Data> list = new ArrayList<>(N);
-        IntStream.range(0, N).forEach(i -> list.add(new Data(sc.nextInt())));
+        final int H = sc.nextInt();
+        final int W = sc.nextInt();
+        final int X = sc.nextInt();
+        final int Y = sc.nextInt();
+        System.out.println(String.format("%1$d, %2$d, %3$d, %4$d", H, W, X, Y));
+        sc.nextLine();
+        List<String> inptField = new ArrayList<>();
+        IntStream.range(0, H).forEach(i -> inptField.add(sc.nextLine()));
+        final String moveSeries = sc.nextLine();
+        System.out.println(inptField);
+        System.out.println(moveSeries);
         sc.close();
-        solve(list);
+        Field field = new Field(X, Y, inptField);
+        solve(field, moveSeries);
     }
 
-    public static void solve(List<Data> list) {
-        if (!isSafeFormat(list)) {
-            System.out.println(0);
-            return;
-        }
-        long ans = 1;
-        for (int i = 0; i < list.size() / 2; i++) {
-            ans = ans * 2 % 1_000_000_007;
-        }
-        System.out.println(ans);
-    }
-
-    public static boolean isSafeFormat(List<Data> list) {
-        list.sort((x, y) -> Integer.compare(x.getAbs(), y.getAbs()));
-        boolean isOK = false;
-        if (list.size() % 2 == 1) {
-            // odd
-            isOK = IntStream.range(0, list.size()).allMatch(i -> (i+1)/2 == list.get(i).getAbs()/2);
-        } else {
-            isOK = IntStream.range(0, list.size()).allMatch(i -> i/2 == list.get(i).getAbs()/2);
-        }
-        return isOK;
+    public static void solve(Field field, String moveSeries) {
+        moveSeries.chars().forEach(c -> field.move((char)c));
+        System.out.println(field);
     }
 }
 
-class Data extends Object implements Comparable<Data> {
-    private int abs;
+class Point {
+    private final int x;
+    private final int y;
 
-    public Data(int abs) {
-        this.abs = abs;
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public int getAbs() {
-        return this.abs;
+    public int getX() {
+        return this.x;
+    }
+    
+    public int getY() {
+        return this.y;
+    }
+
+    public Point move(int dx, int dy) {
+        return new Point(this.x+dx, this.y+dy);
+    }
+}
+
+class Field extends Object {
+    private Point userPosition;
+    private List<String> field;
+    private int enterCount;
+
+
+    public Field(int x, int y, List<String> field) {
+        this.userPosition = new Point(x, y);
+        this.field = field;
+        this.enterCount = 0;
+    }
+
+    public Point getUserPosition() {
+        return this.userPosition;
+    }
+
+    public char getFieldPoint(Point p) {
+        char c = this.field.get(p.getX()).charAt(p.getY());
+        System.out.println(c);
+        return c;
+    }
+
+    public int getEnterCount() {
+        return this.enterCount;
     }
 
     @Override
     public String toString() {
-        return String.format("%1$d", this.abs);
+        return String.format("%1$d %2$d %3$d", this.userPosition.getX(), this.userPosition.getY(), this.enterCount);
     }
 
-    @Override
-    public int compareTo(Data d) {
-        return Integer.compare(d.getAbs(), this.getAbs());
+    public Point getMovedPosition(char m) {
+        int dx = 0;
+        int dy = 0;
+        switch (m) {
+            case 'U':
+                dx--;
+                break;
+            case 'D':
+                dx++;
+                break;
+            case 'L':
+                dy--;
+                break;
+            case 'R':
+                dy++;
+                break;
+            default:
+                break;
+        }
+        return new Point(this.userPosition.getX() + dx, this.userPosition.getY() + dy);
+    }
+
+    public void move(char m) {
+        Point tempPoint = getMovedPosition(m);
+        switch (getFieldPoint(tempPoint)) {
+            case '@':
+                this.userPosition = tempPoint;
+                this.enterCount++;
+                break;
+            case '.':
+                this.userPosition = tempPoint;
+                break;
+            default: // 「#」もここ
+                break;
+        }
+        System.out.println(m + " -> " + this);
     }
 }
