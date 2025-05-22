@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
-    // ??m??s
+    // 60m: 正確には測れなかったが、60分ぐらい
     // ABC066C
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -12,17 +12,19 @@ public class Main {
         List<Data> list = new ArrayList<>(N);
         IntStream.range(0, N).forEach(i -> list.add(new Data(sc.nextInt())));
         sc.close();
-        System.out.println(N + ", " + list);
         solve(list);
     }
 
     public static void solve(List<Data> list) {
-        System.out.println("solve");
         if (!isSafeFormat(list)) {
             System.out.println(0);
             return;
         }
-        System.out.println((long)(Math.pow(2, list.size() / 2)));
+        long ans = 1;
+        for (int i = 0; i < list.size() / 2; i++) {
+            ans = ans * 2 % 1_000_000_007;
+        }
+        System.out.println(ans);
     }
 
     public static boolean isSafeFormat(List<Data> list) {
@@ -34,7 +36,6 @@ public class Main {
         } else {
             isOK = IntStream.range(0, list.size()).allMatch(i -> i/2 == list.get(i).getAbs()/2);
         }
-        System.out.println(String.format("%1$s, isOK(%2$s), list: %3$s", list.size() % 2 == 0 ? "even" : "odd", isOK, list));
         return isOK;
     }
 }
