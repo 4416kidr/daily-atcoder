@@ -20,12 +20,18 @@ public class Main {
         System.out.println(inptField);
         System.out.println(moveSeries);
         sc.close();
-        Field field = new Field(X, Y, inptField);
+        Field field = new Field(X-1, Y-1, inptField);
+        field.showMapAndUser();
         solve(field, moveSeries);
     }
 
     public static void solve(Field field, String moveSeries) {
-        moveSeries.chars().forEach(c -> field.move((char)c));
+        // moveSeries.chars().forEach(c -> field.move((char)c));
+        IntStream.range(0, moveSeries.length()).forEach(i -> {
+            char c = moveSeries.charAt(i);
+            System.out.println(String.format("--- [%1$d, %2$s] ---", i, c));
+            field.move(c);
+        });
         System.out.println(field);
     }
 }
@@ -50,9 +56,14 @@ class Point {
     public Point move(int dx, int dy) {
         return new Point(this.x+dx, this.y+dy);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%1$d %2$d", this.x+1, this.y+1);
+    }
 }
 
-class Field extends Object {
+class Field {
     private Point userPosition;
     private List<String> field;
     private int enterCount;
@@ -70,7 +81,6 @@ class Field extends Object {
 
     public char getFieldPoint(Point p) {
         char c = this.field.get(p.getX()).charAt(p.getY());
-        System.out.println(c);
         return c;
     }
 
@@ -80,7 +90,7 @@ class Field extends Object {
 
     @Override
     public String toString() {
-        return String.format("%1$d %2$d %3$d", this.userPosition.getX(), this.userPosition.getY(), this.enterCount);
+        return String.format("%1$d %2$d %3$d", this.userPosition.getX()+1, this.userPosition.getY()+1, this.enterCount);
     }
 
     public Point getMovedPosition(char m) {
@@ -107,10 +117,13 @@ class Field extends Object {
 
     public void move(char m) {
         Point tempPoint = getMovedPosition(m);
+        int prevCount = this.enterCount;
+        Point prevPoint = new Point(this.userPosition.getX(), this.userPosition.getY());
         switch (getFieldPoint(tempPoint)) {
             case '@':
                 this.userPosition = tempPoint;
                 this.enterCount++;
+                demolishHouse(tempPoint);
                 break;
             case '.':
                 this.userPosition = tempPoint;
@@ -118,6 +131,21 @@ class Field extends Object {
             default: // 「#」もここ
                 break;
         }
-        System.out.println(m + " -> " + this);
+        System.out.println(String.format("%1$s: [%2$s %3$d] -> [%4$s %5$d]", m, prevPoint, prevCount, this.userPosition, this.enterCount));
+        this.showMapAndUser();
+    }
+
+    public String replacedTargetLine(char c) {
+        StringBuilder targetLine = new StringBuilder(this.field.get(userPosition.getX()));
+        targetLine.setCharAt(userPosition.getY(), c);
+        return targetLine.toString();
+    }
+
+    public void demolishHouse(Point p) {
+        this.field.set(p.getX(), replacedTargetLine('.'));
+    }
+
+    public void showMapAndUser() {
+        IntStream.range(0, field.size()).forEach(i -> System.out.println(i != userPosition.getX() ? this.field.get(i) : replacedTargetLine('O')));
     }
 }
