@@ -4,34 +4,26 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
-    // 44m
-    // ABC066C
+    // 1h29m
+    // ABC385B
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         final int H = sc.nextInt();
-        final int W = sc.nextInt();
+        sc.nextInt();
         final int X = sc.nextInt();
         final int Y = sc.nextInt();
-        System.out.println(String.format("%1$d, %2$d, %3$d, %4$d", H, W, X, Y));
         sc.nextLine();
         List<String> inptField = new ArrayList<>();
         IntStream.range(0, H).forEach(i -> inptField.add(sc.nextLine()));
         final String moveSeries = sc.nextLine();
-        System.out.println(inptField);
-        System.out.println(moveSeries);
         sc.close();
         Field field = new Field(X-1, Y-1, inptField);
-        field.showMapAndUser();
+        // field.showMapAndUser();
         solve(field, moveSeries);
     }
 
     public static void solve(Field field, String moveSeries) {
-        // moveSeries.chars().forEach(c -> field.move((char)c));
-        IntStream.range(0, moveSeries.length()).forEach(i -> {
-            char c = moveSeries.charAt(i);
-            System.out.println(String.format("--- [%1$d, %2$s] ---", i, c));
-            field.move(c);
-        });
+        moveSeries.chars().forEach(c -> field.move((char)c));
         System.out.println(field);
     }
 }
@@ -117,8 +109,6 @@ class Field {
 
     public void move(char m) {
         Point tempPoint = getMovedPosition(m);
-        int prevCount = this.enterCount;
-        Point prevPoint = new Point(this.userPosition.getX(), this.userPosition.getY());
         switch (getFieldPoint(tempPoint)) {
             case '@':
                 this.userPosition = tempPoint;
@@ -131,8 +121,6 @@ class Field {
             default: // 「#」もここ
                 break;
         }
-        System.out.println(String.format("%1$s: [%2$s %3$d] -> [%4$s %5$d]", m, prevPoint, prevCount, this.userPosition, this.enterCount));
-        this.showMapAndUser();
     }
 
     public String replacedTargetLine(char c) {
