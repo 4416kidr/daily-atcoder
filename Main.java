@@ -4,136 +4,47 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
-    // 1h29m
-    // ABC385B
+    // 26m
+    // ABC384B
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        final int H = sc.nextInt();
-        sc.nextInt();
-        final int X = sc.nextInt();
-        final int Y = sc.nextInt();
-        sc.nextLine();
-        List<String> inptField = new ArrayList<>();
-        IntStream.range(0, H).forEach(i -> inptField.add(sc.nextLine()));
-        final String moveSeries = sc.nextLine();
+        final int N = sc.nextInt();
+        final int R = sc.nextInt();
+        List<ARC> inptArc = new ArrayList<>();
+        IntStream.range(0, N).forEach(i -> inptArc.add(new ARC(sc.nextInt(), sc.nextInt())));
         sc.close();
-        Field field = new Field(X-1, Y-1, inptField);
-        // field.showMapAndUser();
-        solve(field, moveSeries);
+        solve(R, inptArc);
     }
 
-    public static void solve(Field field, String moveSeries) {
-        moveSeries.chars().forEach(c -> field.move((char)c));
-        System.out.println(field);
+    public static void solve(int rate, List<ARC> arcs) {
+        for (ARC arc : arcs) {
+            rate += arc.isTarget(rate) ? arc.getScore() : 0;
+        }
+        System.out.println(rate);
     }
 }
 
-class Point {
-    private final int x;
-    private final int y;
+class ARC {
+    private final int div;
+    private final int score;
 
-    public Point(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public ARC(int div, int score) {
+        this.div = div;
+        this.score = score;
     }
 
-    public int getX() {
-        return this.x;
+    public boolean isTarget(int beforeScore) {
+        boolean isDiv1Target = this.div == 1 && 1600 <= beforeScore && beforeScore < 2800;
+        boolean isDiv2Target = this.div == 2 && 1200 <= beforeScore && beforeScore < 2400;
+        return isDiv1Target || isDiv2Target;
+    }
+
+    public int getScore() {
+        return this.score;
     }
     
-    public int getY() {
-        return this.y;
-    }
-
-    public Point move(int dx, int dy) {
-        return new Point(this.x+dx, this.y+dy);
-    }
-
     @Override
     public String toString() {
-        return String.format("%1$d %2$d", this.x+1, this.y+1);
-    }
-}
-
-class Field {
-    private Point userPosition;
-    private List<String> field;
-    private int enterCount;
-
-
-    public Field(int x, int y, List<String> field) {
-        this.userPosition = new Point(x, y);
-        this.field = field;
-        this.enterCount = 0;
-    }
-
-    public Point getUserPosition() {
-        return this.userPosition;
-    }
-
-    public char getFieldPoint(Point p) {
-        char c = this.field.get(p.getX()).charAt(p.getY());
-        return c;
-    }
-
-    public int getEnterCount() {
-        return this.enterCount;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%1$d %2$d %3$d", this.userPosition.getX()+1, this.userPosition.getY()+1, this.enterCount);
-    }
-
-    public Point getMovedPosition(char m) {
-        int dx = 0;
-        int dy = 0;
-        switch (m) {
-            case 'U':
-                dx--;
-                break;
-            case 'D':
-                dx++;
-                break;
-            case 'L':
-                dy--;
-                break;
-            case 'R':
-                dy++;
-                break;
-            default:
-                break;
-        }
-        return new Point(this.userPosition.getX() + dx, this.userPosition.getY() + dy);
-    }
-
-    public void move(char m) {
-        Point tempPoint = getMovedPosition(m);
-        switch (getFieldPoint(tempPoint)) {
-            case '@':
-                this.userPosition = tempPoint;
-                this.enterCount++;
-                demolishHouse(tempPoint);
-                break;
-            case '.':
-                this.userPosition = tempPoint;
-                break;
-            default: // 「#」もここ
-                break;
-        }
-    }
-
-    public String replacedTargetLine(char c) {
-        StringBuilder targetLine = new StringBuilder(this.field.get(userPosition.getX()));
-        targetLine.setCharAt(userPosition.getY(), c);
-        return targetLine.toString();
-    }
-
-    public void demolishHouse(Point p) {
-        this.field.set(p.getX(), replacedTargetLine('.'));
-    }
-
-    public void showMapAndUser() {
-        IntStream.range(0, field.size()).forEach(i -> System.out.println(i != userPosition.getX() ? this.field.get(i) : replacedTargetLine('O')));
+        return String.format("Div.%1$d: %2$d", this.div, this.score);
     }
 }
