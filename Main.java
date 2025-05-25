@@ -1,80 +1,66 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String series = sc.nextLine();
         sc.close();
-        solve(series);
-    }
-    private static int countMayAns(int mustC, int mayC) {
-        return -1;
-    }
-    private static int countMustAns(int n) {
-        // n: 必須になっている数字の数
-        switch (n) {
-            case 4:
-                return permutation(4);
-            case 3:
-                // 重複なしの順序 * 重複の場所 / 重複数 * 重複にする数字の種類
-                return permutation(3) * 4 / 2 * 3;
-            case 2:
-                // 1:3の場合(1の場所(4)) + 2:2の場合(全順序/前者の重複/後者の重複) + 3:1の場合(1の場所(4))
-                return 4 + permutation(4) / 2/ 2 + 4;
-            case 1:
-                return 1;
-            default:
-                return -1;
-        }
+        System.out.println(solve(series));
     }
 
-    private static int permutation(int n) {
-        if (n < 0) {
-            return 0;
-        }
-        if (n <= 2) {
-            return n;
-        }
-        int res = 1;
-        for (int i = n; i > 1; i--) {
-            res *= i;
-        }
-        return res;
+    private static void devideNumbers(String series, List<Integer> mustList, List<Integer> mayList) {
+        IntStream.range(0, series.length()).forEach(i -> {
+            switch (series.charAt(i)) {
+                case 'o':
+                    mustList.add(i);
+                    break;
+                case '?':
+                    mayList.add(i);
+                default:
+                    break;
+            }
+        });
     }
 
-    private static void solve(String series) {
+    private static int solve(String series) {
         List<Integer> mustSeries = new ArrayList<>();
         List<Integer> maySeries = new ArrayList<>();
-        for (int i = 0; i < series.length(); i++) {
-            if (series.charAt(i) == 'x') {
-                continue;
-            }
-            if (series.charAt(i) == 'o') {
-                mustSeries.add(i);
-            } else if (series.charAt(i) == '?') {
-                maySeries.add(i);
-            }
-            continue;
+        devideNumbers(series, mustSeries, maySeries);
+        int mustSize = mustSeries.size();
+        
+        if (mustSize > 4) {
+            return 0;
+        } else if (mustSize == 4) {
+            return 4*3*2;
+        } else if (mustSize == 0) {
+            return (int)Math.pow(maySeries.size(), 4);
+        } else if (mustSize == 3) {
+            // 総数 = mustBとmayBの配置 (4!/(1*3!) = 4) * MayBのパターン * mustBの順列 (3! = 6)
+            // may+mustのマスに入るパターン = mustのみの場合 (3/2) + mayのみの場合 (may.size())
+            // mayのみの場合は重複が発生しないが、mustのみの場合は「mustのみの順列」と重複が発生する
+            // mustのみで構成される場合 (4 * 3 * 3! / 2) -> 約分
+            int mustOnly = 4 * 3 * 3;
+            int includeMay = 4 * maySeries.size() * (3*2);
+            return mustOnly + includeMay;
+        } else if (mustSize == 2) {
+            // 総数 = must4の場合 + must3may1の場合 + must2may2の場合
+            // must4の場合: 全通り (2^4) - 余事象 (2) = 14
+            // must3may1の場合: ブロックの配置(4) * mustBlock(2^3 - 2 = 6) * mayBlock(may.size) = 24 * may.size()
+            // must2may2の場合: ブロックの配置(6) * mustBlock(2) * mayBlock(may.size^2 = 4) = 12 * pow(may.size, 2)
+            final int must4 = 14;
+            final int must3 = 24 * maySeries.size();
+            final int must2 = 12 * (int)Math.pow(maySeries.size(), 2);
+            return must4 + must3 + must2;
+        } else if (mustSize == 1) {
+            // 総数 = may+mustで構成した場合 - mayのみで構成した場合
+            return (int)Math.pow(maySeries.size()+1, 4) - (int)Math.pow(maySeries.size(), 4);
+        } else {
+            // mustSize < 0
+            System.out.println("error");
+            return -1;
         }
-        System.out.println(String.format("must(%1$d), may(%2$d)", mustSeries.size(), maySeries.size()));
-
-        // int moreElm = 4 - mustSeries.size();
-        // int mayCount = ;
-        System.out.println(permutation(3) * maySeries.size());
-
-        // o012?345x67889
-        // 012/3, 012/4, 012/5
-        // 0/012, 1/012, 2/012
-        // 012, 021, 102, 120, 201, 210
-        // 3!*4*3 + 3!*4*3/2(重複分)
-        // 3*3!(4+2) = 18*6 = 108
-        // 0111, 0011, 0001
-        // 0011 -> 0011, 0101, 0110, 1001, 1010, 1100
-        for (int i = 1; i <= 4; i++) {
-            System.out.println(countMustAns(i));
-        }
-        System.out.println(countMayAns(0, 0));
     }
 }
