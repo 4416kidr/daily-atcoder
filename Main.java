@@ -5,6 +5,11 @@ import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
+        // 201C
+        // 5時間ぐらいかかった
+        // あまりに非効率的学習。
+        // 実装方法を思いついても、時間内に実装できない場合は切り上げたくないという気持ちがある
+        // もうとりあえず30分経ったら、強制終了でやっていかないと詰みやね。
         Scanner sc = new Scanner(System.in);
         String series = sc.nextLine();
         sc.close();
