@@ -6,13 +6,14 @@ import java.util.stream.IntStream;
 public class Main {
     // ABC390B
     // ?H?M
+    static final boolean isDebugMode = true;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         final int N = sc.nextInt();
         final List<Integer> list = new ArrayList<>(N);
         IntStream.range(0, N).forEach(i -> list.add(sc.nextInt()));
         sc.close();
-        System.out.printf("list %s\n", list);
+        debug("list %s", list);
         System.out.println(solve(list) ? "Yes" : "No");
     }
 
@@ -22,23 +23,25 @@ public class Main {
         }
         int first = list.get(0);
         int second = list.get(1);
-        System.out.printf("first(%d), second(%d)\n", first, second);
+        debug("first(%d), second(%d)", first, second);
         int gcd = greatest_common_divisor(first, second);
-        System.out.println("gcd: " + gcd);
+        debug("gcd: %d\n", gcd);
         // 約分して公比ratioを求める
         int numerator = second / gcd;
         int denominator = first / gcd;
-        System.out.printf("ratio: %d / %d\n", numerator, denominator);
+        debug("ratio: %d / %d", numerator, denominator);
         // for文
-        return IntStream.range(1, list.size()).allMatch(i -> {
+        boolean notOK = false;
+        for (int i = 1; i < list.size(); i++) {
             int preV = list.get(i-1);
             int value = list.get(i);
-            if (preV % denominator != 0) {
-                return false;
+            debug("[%d] -%d- * (%d/%d) -> [%d] == -%d-", i, preV, numerator, denominator, preV / denominator * numerator, value);
+            if ((preV / denominator * numerator) != value) {
+                notOK = true;
+                break;
             }
-            System.out.printf("[%d] -%d- * (%d/%d) -> [%d] == -%d-\n", i, preV, numerator, denominator, preV / denominator * numerator, value);
-            return (preV / denominator * numerator) == value;
-        });
+        }
+        return !notOK;
     }
 
     // 最大公約数を求める
@@ -51,13 +54,19 @@ public class Main {
         int count = 0;
         while (small != 0) {
             count++;
-            System.out.printf("[%d] before: %d / %d = %d ... %d\n", count, big, small, big / small, big % small);
+            debug("[%d] before: %d / %d = %d ... %d", count, big, small, big / small, big % small);
             int res = big % small;
             big = small;
             small = res;
-            System.out.printf("[%d] after: %d, %d\n", count, big, small);
+            debug("[%d] after: %d, %d", count, big, small);
         }
-        System.out.printf("[GCD] big: %d\n", big);
+        debug("[GCD] big: %d", big);
         return big;
+    }
+
+    public static void debug(String format, Object... args) {
+        if (isDebugMode) {
+            System.out.printf("[DEBUG] " + format + "\n", args);
+        }
     }
 }
