@@ -49,16 +49,15 @@ public class Main {
         // r2 = b % r1
         // r3 = r1 % r2
         int count = 0;
-        while (true) {
+        while (small != 0) {
             count++;
             System.out.printf("[%d] before: %d / %d = %d ... %d\n", count, big, small, big / small, big % small);
             int res = big % small;
             big = small;
             small = res;
             System.out.printf("[%d] after: %d, %d\n", count, big, small);
-            if (small == 0) {
-                return big;
-            }
         }
+        System.out.printf("[GCD] big: %d\n", big);
+        return big;
     }
 }
