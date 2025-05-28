@@ -1,5 +1,9 @@
 # daily-atcoder
 
+## 実行
+
+- `docker compose run --rm app sh -c "javac Main.java && echo 'compiled!' && java Main < main.in"`
+
 ## 0506: 配列のインデックスとスライス, Math, 階乗
 
 - [【Java】for文で階乗を計算する (個人ブログ)](https://interuniversitylearning.com/archives/5798)
