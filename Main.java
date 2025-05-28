@@ -188,7 +188,7 @@ enum CellType {
 }
 
 class MyLogger {
-    private static boolean isDebugMode = true;
+    private static boolean isDebugMode = false;
 
     public static void debug(String format, Object... args) {
         if (isDebugMode) {
