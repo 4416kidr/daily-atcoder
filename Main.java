@@ -30,10 +30,20 @@ public class Main {
         debug("%s", CellType.CHAIR.getSymbol());
         debug("%s", CellType.FLOOR.getSymbol());
         debug("%s", office);
-        office.setHumidifier(0, distance);
-        debug("\n");
-        office.setHumidifier(4, distance);
-        return office.countHumid();
+        int res = IntStream.range(0, office.size()).reduce(-1, (accAll, i) -> {
+            Office tFirst = office.clone().setHumidifier(i, distance);
+            int tMax = IntStream.range(i, office.size()).reduce(accAll, (accSub, j) -> {
+                Office tSecond = tFirst.clone().setHumidifier(j, distance);
+                if (accSub < tSecond.countHumid()) {
+                    debug("  [%d, %d]: acc(%d), cur(%d)", i, j, accSub, tSecond.countHumid());
+                    debug("  [updated]\n[DEBUG] %s", tSecond);
+                }
+                return accSub < tSecond.countHumid() ? tSecond.countHumid() : accSub;
+            });
+            debug("[%d]: acc(%d), cur(%d)", i, accAll, tMax);
+            return accAll < tMax ? tMax : accAll;
+        });
+        return res;
     }
 }
 
@@ -41,8 +51,10 @@ class Office implements Cloneable {
     private int width;
     private int height;
     private List<CellType> flattenMap;
+    private boolean isDebugMode;
 
     public Office(List<String> map, int w, int h) {
+        this.isDebugMode = false;
         this.width = w;
         this.height = h;
         String oneLine = map.stream().reduce("", (total, cur) -> total += cur);
@@ -53,18 +65,20 @@ class Office implements Cloneable {
     }
 
     private void debug(String format, Object... args) {
-        MyLogger.debug(format, args);
+        if (this.isDebugMode) {
+            MyLogger.debug(format, args);
+        }
     }
 
     public int size() {
         return this.flattenMap.size();
     }
 
-    public void setHumidifier(int pos, int pow) {
+    public Office setHumidifier(int pos, int pow) {
         CellType toSetCell = this.flattenMap.get(pos);
         if (!toSetCell.canSet()) {
             debug("setHumidifier(%d): cant set at %d -> %s", pos, pos, toSetCell);
-            return;
+            return this.clone();
         }
         debug("setHumidifier(%d): before all", pos);
         debug("%s", this);
@@ -74,13 +88,15 @@ class Office implements Cloneable {
 
         // 5*5 -> 0: (1, 1) 3: (1, 3), 5: (1, 5) 17: (3, 2)
         // diffuse
-        int ph = pos / this.width;
-        int pw = pos % this.height;
+        List<Integer> phw = this.getPos(pos);
+        int ph = phw.get(0);
+        int pw = phw.get(1);
         IntStream.range(0, this.size()).forEach(i -> {
             CellType tCell = this.flattenMap.get(i);
             if (!tCell.canSet() || tCell == CellType.HUMID) return;
-            int th = i / this.width;
-            int tw = i % this.width;
+            List<Integer> thw = this.getPos(i);
+            int th = thw.get(0);
+            int tw = thw.get(1);
             debug("(%d -> %d, %d), (%d -> %d, %d)", pos, ph, pw, i, th, tw);
             int distance = Math.abs(ph - th) + Math.abs(pw - tw);
             if (distance > pow) return;
@@ -89,6 +105,7 @@ class Office implements Cloneable {
 
         debug("setHumidifier(%d): after humid", pos);
         debug("%s", this);
+        return this.clone();
     }
 
     public List<String> transform() {
@@ -106,10 +123,25 @@ class Office implements Cloneable {
         return (int)this.flattenMap.stream().filter(c -> c == CellType.HUMID || c == CellType.HUMIDIFIER).count();
     }
 
+    List<Integer> getPos(int p) {
+        List<Integer> list = new ArrayList<>(2);
+        int h = p / this.width;
+        int w = p % this.width;
+        list.add(h);
+        list.add(w);
+        debug("getPos(%d) -> (%d, %d)", p, h, w);
+        return list;
+    }
+
     @Override
     public Office clone() {
+        Office office = null;
         try {
-            return (Office)super.clone();
+            office = (Office)super.clone();
+            List<CellType> list = new ArrayList<>(this.height * this.width);
+            IntStream.range(0, this.size()).forEach(i -> list.add(this.flattenMap.get(i)));
+            office.flattenMap = list;
+            return office;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("cant clone...", e.getCause());
         }
