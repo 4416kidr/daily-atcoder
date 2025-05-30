@@ -3,16 +3,17 @@ import java.util.Scanner;
 public class Main {
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
-    double x = sc.nextDouble();
+    final int N = sc.nextInt();
+    final int D = sc.nextInt();
+    sc.nextLine();
+    String tStr = sc.nextLine();
     sc.close();
-    int res = 0;
-    if (x >= 38.0) {
-        res = 1;
-    } else if (x < 37.5) {
-        res = 3;
-    } else {
-        res = 2;
+
+    int ind = -1;
+    for (int i = 0; i < D; i++) {
+        ind = tStr.lastIndexOf("@");
+        tStr = tStr.substring(0, ind) + "." + tStr.substring(ind+1, N);
     }
-    System.out.println(res);
+    System.out.println(tStr);
   }
 }
