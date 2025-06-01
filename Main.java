@@ -1,35 +1,36 @@
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Main {
-  public static void main(String[] args) {
-    // 381B
-    Scanner sc = new Scanner(System.in);
-    String tStr = sc.nextLine();
-    sc.close();
-    // System.out.println(tStr);
-    System.out.println(solve(tStr) ? "Yes" : "No");
-  }
+    public static void main(String[] args) {
+        // 380B
+        Scanner sc = new Scanner(System.in);
+        String tStr = sc.nextLine();
+        sc.close();
+        show(solve(tStr));
+    }
 
-  private static boolean solve(String inpt) {
-    if (inpt.length() % 2 != 0) {
-        // System.out.println("ERROR: odd");
-        return false;
-    }
-    String containStr = "";
-    for (int i = 0; i < inpt.length() / 2; i++) {
-        // System.out.printf("%s != %s\n", inpt.charAt(2*i+1), inpt.charAt(2*i));
-        if (inpt.charAt(2*i + 1) != inpt.charAt(2*i)) {
-            // System.out.println("ERROR: series");
-            return false;
+    private static List<Integer> solve(String inpt) {
+        List<Integer> list = new ArrayList<>();
+        int count = 0;
+        for (int i = 1; i < inpt.length(); i++) {
+            if (inpt.charAt(i) == '|') {
+                list.add(count);
+                count = 0;
+            } else {
+                count++;
+            }
         }
-        // System.out.printf("%s in %s \n", inpt.charAt(2*i), containStr);
-        if (containStr.contains(String.valueOf(inpt.charAt(2*i)))) {
-            // System.out.println("ERROR: contain");
-            return false;
-        }
-        containStr += inpt.charAt(2*i);
-        // System.out.println(containStr);
+        return list;
     }
-    return true;
-  }
+    private static void show(List<Integer> list) {
+        if (list.size() == 1) {
+            System.out.println(list.get(0));
+            return;
+        }
+        System.out.printf("%d", list.get(0));
+        list.stream().skip(1).forEach(i -> System.out.printf(" %d", i));
+        System.out.println();
+    }
 }
