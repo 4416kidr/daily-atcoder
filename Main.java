@@ -4,33 +4,33 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        // 380B
+        // 379B
         Scanner sc = new Scanner(System.in);
-        String tStr = sc.nextLine();
+        final int n = sc.nextInt();
+        final int k = sc.nextInt();
+        final String tStr = sc.nextLine();
+        String series = sc.nextLine();
         sc.close();
-        show(solve(tStr));
+        System.out.println(solve(series, k));
     }
 
-    private static List<Integer> solve(String inpt) {
-        List<Integer> list = new ArrayList<>();
-        int count = 0;
-        for (int i = 1; i < inpt.length(); i++) {
-            if (inpt.charAt(i) == '|') {
-                list.add(count);
-                count = 0;
-            } else {
-                count++;
-            }
-        }
-        return list;
+    private static int block(String inpt, int threshold) {
+        return inpt.length() / threshold;
     }
-    private static void show(List<Integer> list) {
-        if (list.size() == 1) {
-            System.out.println(list.get(0));
-            return;
+
+    private static int solve(String inpt, int threshold) {
+        String tStr = inpt;
+        if (!inpt.contains("X")) {
+            return inpt.length() / threshold;
         }
-        System.out.printf("%d", list.get(0));
-        list.stream().skip(1).forEach(i -> System.out.printf(" %d", i));
-        System.out.println();
+        int count = 0;
+        String[] splt = inpt.split("X");
+        for (int i = 0; i < splt.length; i++) {
+            int prevCount = count;
+            count += splt[i].length() / threshold;
+            System.out.printf("%d: %s, length(%d = %d / %d), count(%d -> %d)\n", i, splt[i], splt[i].length() / threshold, splt[i].length(), threshold, prevCount, count);
+        }
+        System.out.println("---");
+        return count;
     }
 }
