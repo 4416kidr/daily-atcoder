@@ -1,26 +1,71 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
-        // 379B
+        // 378B
         Scanner sc = new Scanner(System.in);
-        sc.nextInt(); // 文字数不要
-        final int k = sc.nextInt();
-        sc.nextLine(); // 改行読み捨て
-        String series = sc.nextLine();
+        final int N = sc.nextInt();
+        final List<Trash> seriesN = new ArrayList<>();
+        IntStream.range(0, N).forEach(i -> seriesN.add(new Trash(sc.nextInt(), sc.nextInt())));
+        final int Q = sc.nextInt();
+        final List<Question> seriesQ = new ArrayList<>();
+        IntStream.range(0, Q).forEach(i -> seriesQ.add(new Question(sc.nextInt(), sc.nextInt())));
         sc.close();
-        System.out.println(solve(series, k));
+        solve(seriesN, seriesQ);
     }
 
-    private static int solve(String inpt, int threshold) {
-        if (!inpt.contains("X")) {
-            return inpt.length() / threshold;
-        }
-        int count = 0;
-        String[] splt = inpt.split("X");
-        for (int i = 0; i < splt.length; i++) {
-            count += splt[i].length() / threshold;
-        }
-        return count;
+    private static void solve(List<Trash> listN, List<Question> listQ) {
+        listQ.stream().forEach(q -> {
+            int res = listN.get(q.getTypeIndex()).dayRemain(q.getDay());
+            System.out.println(res);
+        });
+    }
+}
+
+class Trash {
+    final int q;
+    final int r;
+
+    public Trash(int q, int r) {
+        this.q = q;
+        this.r = r;
+    }
+
+    public int dayRemain(int day) {
+        int step = (day+this.r)/this.q;
+        int res = step * this.q + this.r;
+        System.out.printf("dayRemain(%d): res(%d) = step(%d) * q(%d) + r(%d)\n", day, res, step, this.q, this.r);
+        return res;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Trash(%d, %d)", q, r);
+    }
+}
+
+class Question {
+    final int t;
+    final int d;
+
+    public Question(int t, int d) {
+        this.t = t;
+        this.d = d;
+    }
+
+    public int getTypeIndex() {
+        return this.t-1;
+    }
+
+    public int getDay() {
+        return this.d;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Question(%d, %d)", t, d);
     }
 }
