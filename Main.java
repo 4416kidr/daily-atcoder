@@ -18,16 +18,9 @@ public class Main {
     }
 
     private static void solve(List<Trash> listN, List<Question> listQ) {
-        // listQ.stream().forEach(q -> {
-        //     int res = listN.get(q.getTypeIndex()).dayRemain(q.getDay());
-        //     System.out.println(res);
-        // });
-        IntStream.range(0, 7).forEach(i -> {
-            Trash t = new Trash(7, i);
-            System.out.printf("--- %s ---\n", t);
-            IntStream.range(1, 20).forEach(j -> {
-                System.out.printf("[%d]: old(%d) ?? new(%d)\n", j, t.dayRemain(j), t.dayRemain2(j));
-            });
+        listQ.stream().forEach(q -> {
+            int res = listN.get(q.getTypeIndex()).dayRemain(q.getDay());
+            System.out.println(res);
         });
     }
 }
@@ -42,23 +35,9 @@ class Trash {
     }
 
     public int dayRemain(int day) {
-        int step = (day+this.r)/this.q;
-        int res = step * this.q + this.r;
-        // System.out.printf("dayRemain(%d): res(%d) = step(%d) * q(%d) + r(%d)\n", day, res, step, this.q, this.r);
-        return res;
-    }
-
-    public int dayRemain2(int day) {
-        //     (00, 00): 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
-        //  adj( 3,  7): 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
-        // step( 3,  7): 00, 00, 00, 01, 01, 01, 01, 01, 01, 01, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17
-        // ( 3,  7): 03, 03, 03, 10, 10, 10, 10, 10, 10, 10, 17, 17, 17, 17, 17, 17, 17, 24, 24, 24
-        // ()
         int adj = day-this.r+this.q-1;
         int step = adj/this.q;
-        int res = step * this.q + this.r;
-        // System.out.printf("dayRemain(%d): res(%d) = step(%d) * q(%d) + r(%d)\n", day, res, step, this.q, this.r);
-        return res;
+        return step * this.q + this.r;
     }
 
     @Override
