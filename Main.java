@@ -17,16 +17,13 @@ public class Main {
     private static boolean solve(List<Integer> listN) {
         int prev = listN.get(0);
         int count = 1;
-        int prevC = -1;
         for (int i = 0; i < listN.size(); i++) {
             int v = listN.get(i);
-            prevC = count;
             if (prev == v) {
                 count++;
             } else {
                 count = 1;
             }
-            System.out.printf("[%d]: (%d, %d) %d -> %d\n", i+1, prev, v, prevC, count);
             if (count >= 3) {
                 return true;
             }
