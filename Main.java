@@ -14,21 +14,7 @@ public class Main {
         System.out.println(solve(seriesN) ? "Yes" : "No");
     }
 
-    private static boolean solve(List<Integer> listN) {
-        int prev = listN.get(0);
-        int count = 1;
-        for (int i = 0; i < listN.size(); i++) {
-            int v = listN.get(i);
-            if (prev == v) {
-                count++;
-            } else {
-                count = 1;
-            }
-            if (count >= 3) {
-                return true;
-            }
-            prev = v;
-        }
-        return false;
+    private static boolean solve(List<Integer> list) {
+        return IntStream.range(1, list.size()).reduce(1, (acc, i) -> acc >= 3 ? 3 : (list.get(i-1) == list.get(i) ? acc+1 : 1)) >= 3;
     }
 }
