@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         // 377B
-        // 1848-2015
+        // 1848-2020
         Scanner sc = new Scanner(System.in);
         final List<String> list = new ArrayList<>();
         IntStream.range(0, 8).forEach(i -> list.add(sc.nextLine()));
@@ -41,50 +41,43 @@ class Board {
     public Board paintAll() {
         Board finalBoard = IntStream.range(0, this.height)
             .boxed()
-            .reduce(this, (prevLine, h) -> {
-                Board lineBoard = IntStream.range(0, this.width)
+            .reduce(
+                this, 
+                (prevLine, h) -> IntStream.range(0, this.width)
                     .boxed()
-                    .reduce(prevLine, (prev, w) -> isPiece(translatePoint(w, h)) ? prev.paintFromPoint(w, h) : prev, (a, b) -> b);
-                System.out.printf("lineBoard(%d)\n%s", h+1, lineBoard);
-                return lineBoard;
-            }, (a, b) -> b);
+                    .reduce(prevLine, (prev, w) -> isPiece(translatePoint(w, h)) ? prev.paintFromPoint(w, h) : prev, (a, b) -> b),
+                (a, b) -> b
+            );
         return finalBoard;
     }
 
-    public Board paintFromPoint(int fw, int fh) {
+    private Board paintFromPoint(int fw, int fh) {
         // same width (vertical)
         // Javaの型推論の都合により、reduceの第1引数とStream<T>の型が違う場合、2引数版のreduceは使えないので、3引数版reduceを使う必要がある
         // 第3引数combinerは並列処理に使う引数で、今回は使われないが安全で副作用のない実装をダミーとして置くのが通例
         // (a, b) -> b がよく使われる
         final Board verticalBoard = IntStream.range(0, this.height).boxed().reduce(this, (prev, i) -> i == fh ? prev : prev.paintPoint(translatePoint(fw, i)), (a, b) -> b);
-        final Board crossBoard = IntStream.range(0, this.width).boxed().reduce(verticalBoard, (prev, i) -> i == fw ? prev : prev.paintPoint(translatePoint(i, fh)), (a, b) -> b);
-        // System.out.println(crossBoard);
-        return crossBoard;
+        return IntStream.range(0, this.width).boxed().reduce(verticalBoard, (prev, i) -> i == fw ? prev : prev.paintPoint(translatePoint(i, fh)), (a, b) -> b);
     }
 
-    public Board paintPoint(int flatPoint) {
+    private Board paintPoint(int flatPoint) {
         if (!canPaint(flatPoint)) {
             return this;
         }
-        String newStr = this.board.substring(0, flatPoint) + "x" + this.board.substring(flatPoint+1);
-        // System.out.printf("paintPoint: %d -> %d\n%s\n", this.board.length(), newStr.length(), newStr);
-        return new Board(newStr);
+        return new Board(this.board.substring(0, flatPoint) + "x" + this.board.substring(flatPoint+1));
     }
 
-    // public char getPointStatus
-
-    public boolean canPaint(int flatPoint) {
+    private boolean canPaint(int flatPoint) {
         final char res = board.charAt(flatPoint);
-        // System.out.printf("getPoint: ind(%d) = %d * %d + %d ---> %s\n", ind, this.width, h, w, res);
         return res == '.';
     }
 
-    public boolean isPiece(int flatPoint) {
+    private boolean isPiece(int flatPoint) {
         final char res = board.charAt(flatPoint);
         return res == '#';
     }
 
-    public int translatePoint(int w, int h) {
+    private int translatePoint(int w, int h) {
         return this.width * h + w;
     }
 
