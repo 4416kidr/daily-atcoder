@@ -5,16 +5,19 @@ import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
-        // 396A
+        // 389A
         Scanner sc = new Scanner(System.in);
-        final int N = sc.nextInt();
-        final List<Integer> seriesN = new ArrayList<>();
-        IntStream.range(0, N).forEach(i -> seriesN.add(sc.nextInt()));
+        final String inpt = sc.nextLine();
         sc.close();
-        System.out.println(solve(seriesN) ? "Yes" : "No");
+        // System.out.println(solve(inpt.charAt(0), inpt.charAt(2)));
+        System.out.println(solve2(inpt.charAt(0), inpt.charAt(2)));
     }
 
-    private static boolean solve(List<Integer> list) {
-        return IntStream.range(1, list.size()).reduce(1, (acc, i) -> acc >= 3 ? 3 : (list.get(i-1) == list.get(i) ? acc+1 : 1)) >= 3;
+    private static int solve(char a, char b) {
+        return Integer.valueOf(String.valueOf(a)) * Integer.valueOf(String.valueOf(b));
+    }
+
+    private static int solve2(char a, char b) {
+        return (a - '0') * (b - '0');
     }
 }
