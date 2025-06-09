@@ -1,17 +1,12 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.stream.IntStream;
 
 public class Main {
     public static void main(String[] args) {
-        // 395A
+        // 394A
         Scanner sc = new Scanner(System.in);
-        final int N = sc.nextInt();
-        final List<Integer> list = new ArrayList<>();
-        IntStream.range(0, N).forEach(i -> list.add(sc.nextInt()));
+        final String series = sc.nextLine();
         sc.close();
-        boolean flag = IntStream.range(1, N).allMatch(i -> list.get(i-1) < list.get(i));
-        System.out.println(flag ? "Yes" : "No");
+        final String opt = series.chars().boxed().reduce("", (acc, c) -> (char)(int)c  == '2' ? acc + (char)(int)c : acc, (a, b) -> b);
+        System.out.println(opt);
     }
 }
