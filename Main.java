@@ -2,22 +2,20 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // 393A
-        // 2108-2119 (11m)
-        Scanner sc = new Scanner(System.in);
-        boolean sickFirst = sc.next().equals("sick");
-        boolean sickSecond = sc.next().equals("sick");
+        // 392A
+        // 2330-2340
+        final Scanner sc = new Scanner(System.in);
+        final int A = sc.nextInt();
+        final int B = sc.nextInt();
+        final int C = sc.nextInt();
         sc.close();
-        System.out.println(solve(sickFirst, sickSecond));
+        System.out.println(solve(A, B, C) ? "Yes" : "No");
     }
 
-    private static int solve(boolean isSick1, boolean isSick2) {
-        // 4 fine, fine -> 1 + 2+1
-        // 3 fine, sick -> 1 + 2+0
-        // 2 sick, fine -> 1 + 0+1
-        // 1 sick, sick -> 1 + 0+0
-        final int first = isSick1 ? 0 : 2;
-        final int second = isSick2 ? 0 : 1;
-        return first + second + 1;
+    private static boolean solve(int a, int b, int c) {
+        final boolean ab = a*b == c;
+        final boolean bc = b*c == a;
+        final boolean ca = c*a == b;
+        return ab || bc || ca;
     }
 }
